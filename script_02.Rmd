@@ -1,6 +1,7 @@
 ---
 title: "Week 2"
-author: "David Kane"
+author: "Michelle Kurilla"
+date: September 17, 2020
 output: html_document
 ---
 
@@ -9,6 +10,7 @@ Go to https://registrar.fas.harvard.edu/faculty-staff/courses/enrollment and scr
 Load **tidyverse**, **readxl** and **janitor** into your setup chunk. You may need to install the packages **readxl** and **janitor** if you haven't already.
 
 ```{r setup, include=FALSE}
+install.packages("readxl")
 library(tidyverse)
 library(readxl)
 library(janitor)
@@ -21,13 +23,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Once you have finished cleaning your data, figure out the course with the highest enrollment. And figure out how many students are enrolled in Gov 50. If you get a number much lower than 151, you have done something wrong . . .
 
-
-
+```{r}
+en_fall_2020 <- read_excel("raw_data/class_enrollment_summary_by_term_9-17-2020.xlsx", skip = 3) %>%
+  filter(UGrad >= 10) %>%
+  select("Course ID", "Course Name", "Course Department", "Instructor Full Name", "UGrad") %>%
+  arrange(desc(UGrad)) %>%
+  drop_na()
+en_fall_2020
+```
+Answer: Principles of Economics (more commonly known as Ec10) is the course with
+the highest enrollment. Data (more commonly known as Gov50) has an enrollment
+of 110 undergraduates. 
 
 ### Scene 2
 
 **Prompt:** Create a bar plot of the 10 biggest courses. Order the plot so that courses appear in descending order. You will want to use coord_flip() to make your plot easy to read.
 
+```{r}
+en_fall_2020 %>%
+  slice(1:10) %>%
+  ggplot(en_fall_2020, aes(x = Course ID, y = UGrad)) + 
+  geom_col()
+```
 
 
 
